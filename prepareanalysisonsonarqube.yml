@@ -1,0 +1,50 @@
+parameters:
+- name: 'SonarQube' #Select the SonarQube server endpoint for your project. 
+  default: ''
+  type: string
+- name: 'projectKey' #The SonarQube project unique key, i.e. sonar.projectKey
+  default: '' 
+  type: string 
+- name: 'projectName' #The SonarQube project name, i.e. sonar.projectName
+  default: ''
+  type: string 
+- name: 'projectVersion' #The SonarQube project version, i.e. sonar.projectVersion
+  default: '1.0' 
+  type: string 
+- name: 'extraProperties' # Additional properties that will be passed to the scanner, Put one key=value per line, example:, sonar.exclusions=**/*.bin   
+  default: '' 
+  type: string 
+- name: 'condition' #specify conditions to run this task 
+  default: '' #stops if previous task fails
+  type: string 
+- name: 'continueOnError'
+  default: 'false'
+  type: boolean 
+- name: 'enabled' #disable or enable the pipeline
+  default: 'true'
+  type: boolean 
+- name: 'timeoutInMinutes'  #Specifies the maximum time, in minutes, that a task is allowed to execute before being canceled by server.A zero value indicates an infinite timeout.
+  default: '0'
+  type: string 
+- name: 'retryCountOnTaskFailure' #Specifies the number of retries for this task that will happen in case of task failure.
+  default: '0'
+  type: string 
+steps:
+- task: SonarSource.sonarqube.15B84CA1-B62F-4A2A-A403-89B77A063157.SonarQubePrepare@5
+  displayName: 'Prepare analysis on SonarQube'
+  inputs:
+    SonarQube: ${{ parameters.SonarQube }}
+    projectKey: ${{ parameters.projectKey }}
+    projectName: ${{ parameters.projectName }}
+    projectVersion: ${{ parameters.projectVersion }}
+    extraProperties: ${{ parameters.extraProperties }}
+    condition: ${{ parameters.condition }}
+    #'succeededOrFailed()' -Even if a previous task has failed, unless the build was canceled
+    #'always()' -Even if a previous task has failed, even if the build was canceled
+    #'failed()' -Only when a previous task has failed
+    enabled: ${{ parameters.enabled }}
+    continueOnError: ${{ parameters.continueOnError }}
+    timeoutInMinutes: ${{ parameters.timeoutInMinutes }}
+    retryCountOnTaskFailure: ${{ parameters.retryCountOnTaskFailure }}
+
+

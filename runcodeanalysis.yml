@@ -1,0 +1,30 @@
+parameters:
+- name: 'condition' #specify conditions to run this task 
+  default: '' #stops if previous task fails
+  type: string 
+- name: 'continueOnError'
+  default: 'false'
+  type: boolean 
+- name: 'enabled' #disable or enable the pipeline
+  default: 'true'
+  type: boolean 
+- name: 'timeoutInMinutes'  #Specifies the maximum time, in minutes, that a task is allowed to execute before being canceled by server.A zero value indicates an infinite timeout.
+  default: '0'
+  type: string 
+- name: 'retryCountOnTaskFailure' #Specifies the number of retries for this task that will happen in case of task failure.
+  default: '0'
+  type: string 
+steps:
+- task: SonarSource.sonarqube.6D01813A-9589-4B15-8491-8164AEB38055.SonarQubeAnalyze@5
+  displayName: 'Run Code Analysis'
+  inputs:
+    condition: ${{ parameters.condition }}
+    #'succeededOrFailed()' -Even if a previous task has failed, unless the build was canceled
+    #'always()' -Even if a previous task has failed, even if the build was canceled
+    #'failed()' -Only when a previous task has failed
+    enabled: ${{ parameters.enabled }}
+    continueOnError: ${{ parameters.continueOnError }}
+    timeoutInMinutes: ${{ parameters.timeoutInMinutes }}
+    retryCountOnTaskFailure: ${{ parameters.retryCountOnTaskFailure }}
+
+
